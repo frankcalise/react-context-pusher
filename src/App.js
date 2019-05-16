@@ -1,7 +1,9 @@
 import React from "react";
-import Pusher from 'pusher-js'
+import Pusher from "pusher-js";
 import { PUSHER_CONFIG } from "./config/pusher.config";
 import "./App.css";
+import { PusherProvider } from "./PusherContext";
+import { Child } from "./Child";
 
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
@@ -11,19 +13,20 @@ Pusher.logToConsole = true;
 // with separate callback but utilizing the existing connection
 const pusher = new Pusher(PUSHER_CONFIG.key, {
   cluster: PUSHER_CONFIG.cluster,
-  forceTLS: true,
-})
+  forceTLS: true
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        Context API w/ Pusher real-time
-      </header>
-      <main className="App-main">
-        Put some main component here
-      </main>
-    </div>
+    <PusherProvider pusher={pusher}>
+      <div className="App">
+        <header className="App-header">Context API w/ Pusher real-time</header>
+        <main className="App-main">
+          <span>Put some main component here</span>
+          <Child />
+        </main>
+      </div>
+    </PusherProvider>
   );
 }
 
