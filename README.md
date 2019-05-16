@@ -67,5 +67,5 @@ you can quickly get up and running by just sending events from Pusher's dashboar
 You'll see your messages fly in on the running application.
 
 ## What's Next
-- [] Show an example via render props for non hooks users
-- [] Implement a reducer pattern as events come in so consumers can utilize stored data
+- [ ] Show an example via render props for non hooks users
+- [ ] Implement a reducer pattern as events come in so consumers can utilize stored data
