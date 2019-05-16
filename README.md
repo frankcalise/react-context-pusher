@@ -1,68 +1,71 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## The problem
 
-## Available Scripts
+Originally when I had a requirement of making some data available in real-time
+withing my React application, I knew little about websockets. My company turned
+to [Pusher](https://pusher.com/) for a free way to explore a real-time solution.
 
-In the project directory, you can run:
+Pusher offers 100 daily connections and unlimited channels with 200,000 messages
+a day for free! It's a great place to get started. 
 
-### `npm start`
+With my inexperience with the library and just following any old tutorial, 
+you set up the Pusher object, connect to the socket and set up some event 
+callbacks in your component.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This works great in a simple environment, but my application is larger scale
+than a quick tutorial application. So I found myself making too many Pusher 
+connections throughout my components just to listen on the same channel for the
+same events. If our team was to grow rapidly (and/or the team gets more efficient
+at working, utilizing more tabs), we'd quickly run up our connection count.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## This solution
 
-### `npm test`
+This solution is to help reduce your connection count (which is recommended by
+Pusher to have a single connection for your application) via React's Context API.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+It demonstrates how you can set up Pusher at the start of your applciation and
+provide it to other children interested in reusing that connection.
 
-### `npm run build`
+## Setup
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clone the repo and install the dependencies via `npm install`.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+[Sign up](https://dashboard.pusher.com/accounts/sign_up) for a free Pusher account.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+In src/config, add a file `pusher.config.js`, inserting your credentials from the
+Pusher dashboard's **App Keys** tab in the following format:
 
-### `npm run eject`
+```javascript
+const PUSHER_CONFIG = {
+  app_id: "my-app-id",
+  key: "my-key",
+  secret: "my-secret-key",
+  cluster: "my-cluster"
+};
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+export { PUSHER_CONFIG };
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Running the Demo
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Launch the demo with `npm start` and navigate to `http://localhost:3000/`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+From the Pusher dashboard, navigate to your app and open the Debug Console tab. Expand
+the event creator and set the fields accordingly:
 
-## Learn More
+* Channel: child-channel
+* Event: child-event
+* Data:
+```json
+{
+  "payload": "my message"
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Ultimately, these messages would come from your server implementation. However,
+you can quickly get up and running by just sending events from Pusher's dashboard.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+You'll see your messages fly in on the running application.
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## What's Next
+- [] Show an example via render props for non hooks users
+- [] Implement a reducer pattern as events come in so consumers can utilize stored data
